@@ -3,7 +3,7 @@ const Users = require('./userDb.js');
 
 const router = express.Router();
 
-// /api/users/
+// POST /api/users/
 router.post('/', async (req, res) => {
   try {
       const user = await Users.insert(req.body);
@@ -18,6 +18,7 @@ router.post('/:id/posts', (req, res) => {
 
 });
 
+// GET /
 router.get('/', async (req, res) => {
   try {
       const users = await Users.get();
@@ -27,8 +28,20 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.get('/:id', (req, res) => {
+// GET /1
+router.get('/:id', async (req, res) => {
+  try {
+      const {id} = req.params;
+      const user = await Users.getById(id);
 
+      if (user) {
+          res.status(200).json(user);
+      } else {
+          res.status(404).json({message: 'User not found'});
+      }
+  } catch (error) {
+      res.status(500).json(error);
+  }
 });
 
 router.get('/:id/posts', (req, res) => {
