@@ -1,9 +1,17 @@
-const express = 'express';
+const express = require('express');
+const Users = require('./userDb.js');
 
 const router = express.Router();
 
-router.post('/', (req, res) => {
-
+// /api/users/
+router.post('/', async (req, res) => {
+  try {
+      const user = await Users.insert(req.body);
+      res.status(201).json(user);
+  } catch (error) {
+      console.log(error);
+      res.status(500).json({message: 'Error adding the user'});
+  }
 });
 
 router.post('/:id/posts', (req, res) => {
